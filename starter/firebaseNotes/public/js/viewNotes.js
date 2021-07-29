@@ -16,36 +16,32 @@ const getNotes = (userId) => {
   const notesRef = firebase.database().ref(`users/${userId}`);
   notesRef.on('value', (snapshot) => {
     const data = snapshot.val();
-    renderDataAsHtml(data);
+    renderData(data);
   });
 };
 
-const renderDataAsHtml = (data) => {
-  let cards = ``;
-  for(const noteItem in data) {
-    const note = data[noteItem];
-    // For each note create an HTML card
-    cards += createCard(note)
-  };
-  // Inject our string of HTML into our viewNotes.html page
-  document.querySelector('#app').innerHTML = cards;
+const renderData = (data) => {
+    const destination = document.querySelector('#app');
+    destination.innerHTML = "";
+    for (let key in data) {
+        const note = data[key];
+        destination.innerHTML += createCard(note);
+    }
 };
 
 const createCard = (note) => {
-  let innerHTML = "";
-  innerHTML += `<div class="column is-one-quarter">`
-  innerHTML += `<div class="card">`
-  innerHTML += `<header class="card-header">`
-  innerHTML += `<p class="card-header-title">`
-  innerHTML += `${note.title}`
-  innerHTML += `</p>`
-  innerHTML += `</header>`
-  innerHTML += `<div class="card-content">`
-  innerHTML += `<div class="content">`
-  innerHTML += `${note.text}`
-  innerHTML += `</div>`
-  innerHTML += `</div>`
-  innerHTML += `</div>`
-  innerHTML += `</div>`
-  return innerHTML;
+    return `<div class="column is-one-quarter">
+                <div class="card"> 
+                    <header class="card-header"> 
+                        <p class="card-header-title"> 
+                            ${note.title} 
+                        </p> 
+                    </header> 
+                    <div class="card-content"> 
+                        <div class="content">
+                            ${note.text} 
+                        </div>
+                    </div> 
+                </div>
+            </div>`;
 };
